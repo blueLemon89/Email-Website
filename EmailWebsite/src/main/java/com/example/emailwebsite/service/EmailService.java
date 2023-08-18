@@ -1,4 +1,4 @@
 package com.example.emailwebsite.service;
 
-public interface EmailService {
+public class EmailService {
 }

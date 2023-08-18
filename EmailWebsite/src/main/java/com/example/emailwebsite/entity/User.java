@@ -17,12 +17,13 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @GenericGenerator(name = "userId")
+    @GeneratedValue(generator = "userId")
+    @GenericGenerator(name = "userId", strategy = "increment")
     private Integer userId;
     @NonNull
     private String name;
     @NonNull
+    @Column(name = "user_name")
     private String userName;
     @NonNull
     private String password;
