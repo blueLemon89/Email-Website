@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
+@CrossOrigin("http://localhost:8080")
+@RequestMapping("/api/user")
 public class UserController {
     @Autowired
     private UserService userService;

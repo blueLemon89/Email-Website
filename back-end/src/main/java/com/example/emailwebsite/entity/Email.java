@@ -28,6 +28,8 @@ public class Email {
 
     private String subject;
 
+    private String body;
+
     private String title;
     @NonNull
     private String label;
