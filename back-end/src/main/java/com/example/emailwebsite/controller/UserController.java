@@ -40,9 +40,9 @@ public class UserController {
     public String registration(@Valid @ModelAttribute("user") UserDTO userDTO,
                                BindingResult result,
                                Model model){
-        Optional<User> userExisting = userService.getUserByUsername(userDTO.getEmailAddress());
+        User userExisting = userService.getUserByUsername(userDTO.getEmailAddress());
         if (userExisting != null) {
-            result.rejectValue("email", null, "There is already an account registered with that email");
+            result.rejectValue("emailAddress", null, "There is already an account registered with that email");
         }
         if (result.hasErrors()) {
             model.addAttribute("userDTO", userDTO);
@@ -55,7 +55,7 @@ public class UserController {
     @GetMapping("/get/{userName}")
     public ResponseEntity<Object> getUserByUsername(@PathVariable String userName) {
         try {
-            Optional<User> user = userService.getUserByUsername(userName);
+            User user = userService.getUserByUsername(userName);
             if (user != null) {
                 return ResponseEntity.ok(user);
             } else {

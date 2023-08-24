@@ -27,8 +27,8 @@ public class User implements UserDetails{
     @NonNull
     private String name;
     @NonNull
-    @Column(name = "user_name")
-    private String userName;
+    @Column(name = "emailAddress")
+    private String emailAddress;
     @NonNull
     private String password;
     @NonNull
@@ -46,15 +46,16 @@ public class User implements UserDetails{
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    @Override
-    public String getUsername() {
-        return userName;
-    }
+
     @Override
     public String getPassword() {
         return password;
     }
 
+    @Override
+    public String getUsername() {
+        return name;
+    }
     @Override
     public boolean isAccountNonExpired() {
         return true;

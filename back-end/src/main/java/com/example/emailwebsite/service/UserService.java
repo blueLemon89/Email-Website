@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
 
-    public Optional<User> getUserByUsername(String userName){
+    public User getUserByUsername(String userName){
         return userRepository.findUserByUsername(userName);
     }
 
@@ -43,8 +43,9 @@ public class UserService {
 //        }
 //        userRepository.save(newUser);
         newUser.setName(userDTO.getFirstName() + " " + userDTO.getLastName());
-        newUser.setUserName(userDTO.getEmailAddress());
-        newUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        newUser.setEmailAddress(userDTO.getEmailAddress());
+//        newUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        newUser.setPassword(userDTO.getPassword());
         newUser.setRole(Role.USER);
         newUser.setPhoneNumber(userDTO.getPhoneNumber());
         userRepository.save(newUser);
@@ -59,7 +60,7 @@ public class UserService {
         String[] name = user.getName().split(" ");
         userDto.setFirstName(name[0]);
         userDto.setLastName(name[1]);
-        userDto.setEmailAddress(user.getUsername());
+        userDto.setEmailAddress(user.getEmailAddress());
         userDto.setPhoneNumber(user.getPhoneNumber());
         return userDto;
     }
