@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
 
@@ -47,7 +47,6 @@ public class UserService {
         newUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         newUser.setRole(Role.USER);
         newUser.setPhoneNumber(userDTO.getPhoneNumber());
-        newUser.setDateOfBirth(userDTO.getDateOfBirth());
         userRepository.save(newUser);
 
     }
@@ -61,7 +60,6 @@ public class UserService {
         userDto.setFirstName(name[0]);
         userDto.setLastName(name[1]);
         userDto.setEmailAddress(user.getUsername());
-        userDto.setDateOfBirth(user.getDateOfBirth());
         userDto.setPhoneNumber(user.getPhoneNumber());
         return userDto;
     }

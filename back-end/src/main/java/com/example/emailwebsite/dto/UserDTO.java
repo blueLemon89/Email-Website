@@ -22,8 +22,7 @@ public class UserDTO {
     private String emailAddress;
     @NotEmpty(message = "Password should not be empty")
     private String password;
-    @NotEmpty
-    private Date dateOfBirth;
+
     @NotEmpty
     private String phoneNumber;
 }

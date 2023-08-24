@@ -32,8 +32,6 @@ public class User implements UserDetails{
     @NonNull
     private String password;
     @NonNull
-    private Date dateOfBirth;
-    @NonNull
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
