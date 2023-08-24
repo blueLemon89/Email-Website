@@ -1,5 +1,6 @@
 package com.example.emailwebsite.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -18,6 +19,7 @@ public class Email {
     @GenericGenerator(name = "emailId")
     private Integer emailId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;

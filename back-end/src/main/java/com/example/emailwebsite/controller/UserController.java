@@ -1,5 +1,6 @@
 package com.example.emailwebsite.controller;
 
+import com.example.emailwebsite.dto.UserDTO;
 import com.example.emailwebsite.entity.User;
 import com.example.emailwebsite.service.UserService;
 import lombok.Getter;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("http://localhost:8080")
@@ -20,7 +23,7 @@ public class UserController {
     @GetMapping("/get/{userName}")
     public ResponseEntity<Object> getUserByUsername(@PathVariable String userName) {
         try {
-            User user = userService.getUserByUsername(userName);
+            Optional<User> user = userService.getUserByUsername(userName);
             if (user != null) {
                 return ResponseEntity.ok(user);
             } else {
@@ -35,9 +38,9 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
     }
     @PostMapping("/add")
-    public ResponseEntity<String> addUser(@RequestBody User user) {
+    public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO) {
         try {
-            userService.addUser(user);
+            userService.addUser(userDTO);
             return ResponseEntity.ok("User added successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add user.");
