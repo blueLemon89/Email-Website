@@ -12,8 +12,8 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "email")
-public class Email {
+@Table(name = "emails")
+public class Emails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @GenericGenerator(name = "emailId")
@@ -21,8 +21,8 @@ public class Email {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "userId")
-    private User user;
+    @JoinColumn(name = "account_id")
+    private Account account;
     @NonNull
     private Integer senderId;
     @NonNull
@@ -37,9 +37,4 @@ public class Email {
     private String label;
     @NonNull
     private Timestamp timeSend;
-    @NonNull
-    private boolean isSchedule;
-    @NonNull
-    private boolean isRead;
-
 }

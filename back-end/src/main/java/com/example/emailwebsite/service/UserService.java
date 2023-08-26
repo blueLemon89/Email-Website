@@ -1,67 +1,81 @@
 package com.example.emailwebsite.service;
 
-import com.example.emailwebsite.dto.UserDTO;
-import com.example.emailwebsite.entity.Role;
-import com.example.emailwebsite.entity.User;
-import com.example.emailwebsite.repository.UserRepository;
+import com.example.emailwebsite.dto.RegisterDto;
+import com.example.emailwebsite.entity.Account;
+import com.example.emailwebsite.entity.Roles;
+import com.example.emailwebsite.repository.AccountRepository;
+import com.example.emailwebsite.repository.RolesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
+
+    private final AccountRepository accountRepo;
+    private final RolesRepository rolesRepo;
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    private UserRepository userRepository;
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-
-
-    public User getUserByUsername(String userName){
-        return userRepository.findUserByUsername(userName);
+    public UserService(AccountRepository accountRepo, RolesRepository rolesRepo, PasswordEncoder passwordEncoder) {
+        this.accountRepo = accountRepo;
+        this.rolesRepo = rolesRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public List<UserDTO> getAllUser(){
-        List<User> users = userRepository.findAll();
-        return users.stream().map((user) -> convertEntityToDto(user))
-                .collect(Collectors.toList());
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Account account = accountRepo.findByEmailAddress(username);
+        if (account == null) {
+            throw new UsernameNotFoundException("Invalid email or password");
+        }
+        List<GrantedAuthority> authorities = getAuthorities(account.getRoles());
+
+        return new User(account.getEmailAddress(), account.getPassword(), authorities);
+    }
+    private List<GrantedAuthority> getAuthorities(List<Roles> roles) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Roles role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getRolesName()));
+        }
+        return authorities;
     }
 
-    public void addUser(UserDTO userDTO){
-        User newUser = new User();
-//        if(user.getName() != null
-//        && user.getUsername() != null
-//        && user.getPassword() != null){
-//            newUser.setName(user.getName());
-//            newUser.setUserName(user.getUsername());
-//            newUser.setPassword(user.getPassword());
-//            newUser.setDateOfBirth(user.getDateOfBirth());
-//            newUser.setPhoneNumber(user.getPhoneNumber());
-//        }
-//        userRepository.save(newUser);
-        newUser.setName(userDTO.getFirstName() + " " + userDTO.getLastName());
-        newUser.setEmailAddress(userDTO.getEmailAddress());
-//        newUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        newUser.setPassword(userDTO.getPassword());
-        newUser.setRole(Role.USER);
-        newUser.setPhoneNumber(userDTO.getPhoneNumber());
-        userRepository.save(newUser);
-
+    public Account save(RegisterDto registerDto) {
+        Roles roles = rolesRepo.findByRolesName("ROLE_USER");
+        if (roles == null) {
+            checkUserRoleExist();
+        }
+        var account = Account.builder()
+                .username(registerDto.getUsername())
+                .emailAddress(registerDto.getEmail())
+                .password(passwordEncoder.encode(registerDto.getPassword()))
+                .roles(Collections.singletonList(roles))
+                .build();
+        return accountRepo.save(account);
     }
-    public User updateUser(User user){
-        return userRepository.save(user);
+    private void checkUserRoleExist(){
+        Roles roles = new Roles();
+        roles.setRolesName("ROLE_USER");
+        rolesRepo.save(roles);
     }
 
-    private UserDTO convertEntityToDto(User user){
-        UserDTO userDto = new UserDTO();
-        String[] name = user.getName().split(" ");
-        userDto.setFirstName(name[0]);
-        userDto.setLastName(name[1]);
-        userDto.setEmailAddress(user.getEmailAddress());
-        userDto.setPhoneNumber(user.getPhoneNumber());
-        return userDto;
+    public Account findByEmail(String email) {
+        return accountRepo.findByEmailAddress(email);
+    }
+
+    public List<Account> findAllUser() {
+        return accountRepo.findAll();
     }
 }
