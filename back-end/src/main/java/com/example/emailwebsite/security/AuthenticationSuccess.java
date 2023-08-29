@@ -19,15 +19,8 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        if (isAdmin(authentication)) {
-            // Pengguna merupakan admin, arahkan ke halaman dashboard admin
-            response.sendRedirect("/admin/dashboard");
-        } else if (isUser(authentication)){
-            // Pengguna bukan admin, arahkan ke halaman index
-            response.sendRedirect("/user/index");
-        }else {
-            response.sendRedirect("/denied");
-        }
+        String userName = authentication.getName();
+        response.sendRedirect("/user/" + userName);
     }
 
     private Boolean isAdmin(Authentication authentication){

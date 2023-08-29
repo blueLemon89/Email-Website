@@ -12,27 +12,9 @@ public class HomeController {
         return "login";
     }
 
-    @GetMapping
+    @GetMapping("/")
     public String home(){
         return "redirect:/login";
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @GetMapping("/user/emaills")
-    public String userIndex(Model model){
-        String message = "Access is successful";
-        model.addAttribute("msg",message);
-        return "index";
-    }
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    @GetMapping("/admin/dashboard")
-    public String admin(Model model){
-        String message = "Access is successful";
-        model.addAttribute("msg",message);
-        return "dashboard";
-    }
-    @GetMapping("/denied")
-    public String deniedLogin(){
-        return "denied";
-    }
 }

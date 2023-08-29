@@ -36,8 +36,8 @@ public class SecurityConfig {
                         .requestMatchers("/", "/login/**", "/register/**",
                                 "/denied")
                         .permitAll()
-                        .requestMatchers("/user/**").hasAuthority("ROLE_USER")
-                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/user/**").permitAll()
+//                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated())
                 .formLogin((login) -> login
                         .loginPage("/login")

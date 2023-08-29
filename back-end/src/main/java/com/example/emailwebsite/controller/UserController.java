@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -43,6 +44,27 @@ public class UserController {
         }
         service.save(registerDto);
         return "redirect:/login";
+    }
+
+    @GetMapping("/user/{emailAddress}")
+    public String userPage(@PathVariable String emailAddress, Model model) {
+        // Here you can retrieve user-specific data and add it to the model
+        // This data can then be displayed in the user page template
+        String userName = service.findByEmail(emailAddress).getUsername();
+        model.addAttribute("userName", userName);
+        return "emailsOfUser"; // Return the name of the user page template
+    }
+    @PostMapping("/user/{emailAddress}/compose")
+    public String composeEmail(){
+        return null;
+    }
+    @GetMapping("user/{emailAdress}/sent")
+    public String sentEmails(){
+        return null;
+    }
+    @GetMapping("/user/{emailAddress}/trash")
+    public String trashEmails(){
+        return null;
     }
 
 
