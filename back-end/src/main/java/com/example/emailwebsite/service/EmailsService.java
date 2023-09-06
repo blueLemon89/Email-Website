@@ -16,8 +16,8 @@ public class EmailsService {
         this.emailsRepository = emailsRepository;
     }
 
-    public List<Emails> getAllEmailsByUserName(String userName){
-        return emailsRepository.getAllEmailByUserName();
+    public List<Emails> getAllEmailsByUserName(Integer id){
+        return emailsRepository.getAllEmailByUserId(id);
     }
 }
 

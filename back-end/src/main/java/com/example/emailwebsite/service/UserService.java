@@ -78,5 +78,11 @@ public class UserService implements UserDetailsService {
         return accountRepo.findAll();
     }
 
+    public Long getAccountIdFromEmailAddress(String emailAddress){
+        Account account = accountRepo.findByEmailAddress(emailAddress);
+        Long id = account.getAccount_id();
+        return id;
+    }
+
 
 }
