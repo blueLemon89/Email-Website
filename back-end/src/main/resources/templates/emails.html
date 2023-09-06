@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page with Sidebar and Background Image</title>
+  <!-- Link Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Link Font Awesome CSS -->
+</head>
+<body>
+<div id="wrapper" class="toggled">
+
+  <!-- Sidebar -->
+  <div id="sidebar-wrapper">
+    <ul class="sidebar-nav">
+      <li class="sidebar-brand">
+        <i class="fa-duotone fa-house"></i>
+        <a th:href="">
+          Home
+        </a>
+      </li>
+      <li class="sidebar-list">
+        <a th:href="">Compose</a>
+      </li>
+      <li class="sidebar-list">
+        <a th:href="">Sent</a>
+      </li>
+      <li class="sidebar-list">
+        <a th:href="">Important</a>
+      </li>
+      <li class="sidebar-list">
+        <a th:href="">Schedule</a>
+      </li>
+      <li class="sidebar-list">
+        <a th:href="">Trash</a>
+      </li>
+      <li class="sidebar-list">
+        <a th:href="">Setting</a>
+      </li>
+    </ul>
+  </div>
+  <!-- /#sidebar-wrapper -->
+
+  <!-- Page Content -->
+  <div id="page-content-wrapper">
+    <div class="container-fluid">
+      <table class = "table table-striped table-bordered">
+        <thead class = "table-dark">
+
+        </thead>
+        <tbody>
+        <tr th:each = "email: ${emails}">
+<!--          <td th:text = "${email.userSent}"></td>-->
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+  <!-- /#page-content-wrapper -->
+
+</div>
+
+
+</body>
+
+</body>
+</html>
+<style>
+  body {
+    overflow-x: hidden;
+    color: #12230c;
+  }
+
+  #wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+  }
+
+  #wrapper.toggled {
+    padding-left: 250px;
+  }
+
+  #sidebar-wrapper {
+
+    position: fixed;
+    left: 250px;
+    width: 0;
+    height: 100%;
+    margin-left: -250px;
+    overflow-y: auto;
+    background: #D3D3D3;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+  }
+
+
+  #wrapper.toggled #sidebar-wrapper {
+    width: 250px;
+  }
+
+  #page-content-wrapper {
+    background-image: url("images/image.png");
+    width: 100%;
+    position: absolute;
+    padding: 15px;
+  }
+
+  #wrapper.toggled #page-content-wrapper {
+    position: absolute;
+    margin-right: -250px;
+  }
+
+  /* Sidebar Styles */
+
+  .sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 250px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sidebar-nav li {
+    text-indent: 20px;
+    line-height: 40px;
+    color: #12230c;
+  }
+
+  .sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #18214d;
+  }
+
+  .sidebar-brand{
+    color: black;
+  }
+
+  .sidebar-nav li a:hover {
+    text-decoration: none;
+    color: black;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .sidebar-nav li a:active, .sidebar-nav li a:focus {
+    text-decoration: none;
+  }
+
+  .sidebar-nav>.sidebar-brand {
+    height: 65px;
+    font-size: 18px;
+    line-height: 60px;
+  }
+
+  .sidebar-nav>.sidebar-brand a {
+    color: #18214d;
+  }
+
+  .sidebar-nav>.sidebar-brand a:hover {
+    color: black;
+    background: none;
+  }
+
+  @media(min-width:768px) {
+    #wrapper {
+      padding-left: 0;
+    }
+    #wrapper.toggled {
+      padding-left: 250px;
+    }
+    #sidebar-wrapper {
+      width: 0;
+    }
+    #wrapper.toggled #sidebar-wrapper {
+      width: 250px;
+    }
+    #page-content-wrapper {
+      padding: 20px;
+      position: relative;
+    }
+    #wrapper.toggled #page-content-wrapper {
+      position: relative;
+      margin-right: 0;
+    }
+  }
+</style>

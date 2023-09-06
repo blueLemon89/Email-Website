@@ -70,7 +70,6 @@ public class UserService implements UserDetailsService {
         roles.setRolesName("ROLE_USER");
         rolesRepo.save(roles);
     }
-
     public Account findByEmail(String email) {
         return accountRepo.findByEmailAddress(email);
     }
@@ -78,4 +77,6 @@ public class UserService implements UserDetailsService {
     public List<Account> findAllUser() {
         return accountRepo.findAll();
     }
+
+
 }
