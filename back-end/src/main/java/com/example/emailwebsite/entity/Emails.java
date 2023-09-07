@@ -24,15 +24,13 @@ public class Emails {
     @JoinColumn(name = "account_id")
     private Account account;
     @NonNull
-    private Integer senderId;
+    private String senderName;
     @NonNull
-    private Integer recipientId;
+    private String recipientName;
 
     private String subject;
 
     private String body;
-
-    private String title;
     @NonNull
     private String label;
     @NonNull

@@ -16,27 +16,27 @@
     <ul class="sidebar-nav">
       <li class="sidebar-brand">
         <i class="fa-duotone fa-house"></i>
-        <a th:href="">
+        <a th:href="@{/user/${userName}}">
           Home
         </a>
       </li>
       <li class="sidebar-list">
-        <a th:href="">Compose</a>
+        <a th:href="@{/user/compose}">Compose</a>
       </li>
       <li class="sidebar-list">
-        <a th:href="">Sent</a>
+        <a th:href="@{/user/sent}">Sent</a>
       </li>
       <li class="sidebar-list">
-        <a th:href="">Important</a>
+        <a th:href="@{/user/important}">Important</a>
       </li>
       <li class="sidebar-list">
-        <a th:href="">Schedule</a>
+        <a th:href="@{/user/schedule}">Schedule</a>
       </li>
       <li class="sidebar-list">
-        <a th:href="">Trash</a>
+        <a th:href="@{/user/trash}">Trash</a>
       </li>
       <li class="sidebar-list">
-        <a th:href="">Setting</a>
+        <a th:href="@{/user/setting}">Setting</a>
       </li>
     </ul>
   </div>
@@ -47,24 +47,27 @@
     <div class="container-fluid">
       <table class = "table table-striped table-bordered">
         <thead class = "table-dark">
-
+        <tr>
+            <th> Sender</th>
+            <th> Subject</th>
+            <th> Body </th>
+            <th> Label </th>
+            <th> Time </th>
+        </tr>
         </thead>
         <tbody>
         <tr th:each = "email: ${emails}">
-<!--          <td th:text = "${email.userSent}"></td>-->
+            <td th:text = "${email.senderName}"></td>
+            <td th:text = "${email.subject}"></td>
+            <td th:text = "${email.body}"></td>
+            <td th:text = "${email.label}"></td>
+            <td th:text = "${email.timeSend}"></td>
         </tr>
         </tbody>
-      </table>
-
+    </table>
     </div>
   </div>
-  <!-- /#page-content-wrapper -->
-
 </div>
-
-
-</body>
-
 </body>
 </html>
 <style>

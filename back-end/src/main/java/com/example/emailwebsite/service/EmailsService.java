@@ -16,7 +16,7 @@ public class EmailsService {
         this.emailsRepository = emailsRepository;
     }
 
-    public List<Emails> getAllEmailsByUserName(Integer id){
+    public List<Emails> getAllEmailByUserId(Long id){
         return emailsRepository.getAllEmailByUserId(id);
     }
 }

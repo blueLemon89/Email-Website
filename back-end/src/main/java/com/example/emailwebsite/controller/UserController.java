@@ -53,21 +53,20 @@ public class UserController {
         userService.save(registerDto);
         return "redirect:/login";
     }
-    @GetMapping("/user/index")
-    public String userPage(String emailAddress, Model model) {
-        // Here you can retrieve user-specific data and add it to the model
-        // This data can then be displayed in the user page template
+    @GetMapping("/user/{emailAddress}")
+    public String userPage(@PathVariable String emailAddress, Model model) {
+        Long id = userService.findByEmail(emailAddress).getAccount_id();
         String userName = userService.findByEmail(emailAddress).getUsername();
+        List<Emails> emails = emailsService.getAllEmailByUserId(id);
+        model.addAttribute("emails", emails);
         model.addAttribute("userName", userName);
-
-
-        return "emails"; // Return the name of the user page template
+        return "emails";
     }
     @PostMapping("/user/compose")
     public String composeEmail(){
         return null;
     }
-    @GetMapping("user/sent")
+    @GetMapping("/user/sent")
     public String sentEmails(){
         return null;
     }
@@ -75,4 +74,14 @@ public class UserController {
     public String trashEmails(){
         return null;
     }
+    @GetMapping("/user/important")
+    public String importantEmail(){
+        return null;
+    }
+    @GetMapping("/user/setting")
+    public String setting(){
+        return null;
+    }
+
+
 }
