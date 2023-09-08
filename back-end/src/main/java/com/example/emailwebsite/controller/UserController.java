@@ -8,13 +8,12 @@ import com.example.emailwebsite.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,12 +25,17 @@ public class UserController {
     @Lazy
     private final EmailsService emailsService;
 
+    private String userEmailAddress;
+
     @Autowired
     public UserController(UserService userService, EmailsService emailsService) {
         this.userService = userService;
         this.emailsService = emailsService;
     }
 
+    public void constructor(String name){
+        this.userEmailAddress = name;
+    }
     @GetMapping("/register")
     public String regis(Model model) {
         RegisterDto registerDto = new RegisterDto();
@@ -53,18 +57,30 @@ public class UserController {
         userService.save(registerDto);
         return "redirect:/login";
     }
-    @GetMapping("/user/{emailAddress}")
-    public String userPage(@PathVariable String emailAddress, Model model) {
+    @GetMapping("/user/index")
+    public String userIndex(@RequestParam("emailAddress") String emailAddress, Model model) {
+        userEmailAddress = emailAddress;
         Long id = userService.findByEmail(emailAddress).getAccount_id();
-        String userName = userService.findByEmail(emailAddress).getUsername();
         List<Emails> emails = emailsService.getAllEmailByUserId(id);
         model.addAttribute("emails", emails);
-        model.addAttribute("userName", userName);
+        model.addAttribute("userName", emailAddress);
         return "emails";
     }
-    @PostMapping("/user/compose")
-    public String composeEmail(){
-        return null;
+
+    @GetMapping("/user/compose")
+    public String getCompose(Model model){
+        Emails emails = new Emails();
+        model.addAttribute("emails", emails);
+        return "compose";
+    }
+    @PostMapping("/user/index")
+    public String composeEmail(@ModelAttribute("email") Emails email){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String senderEmailAddress = authentication.getName();
+        emailsService.save(email, senderEmailAddress);
+//        model.addAttribute("email", senderEmailAddress);
+        return "redirect:/user/index?emailAddress=" +senderEmailAddress;
+
     }
     @GetMapping("/user/sent")
     public String sentEmails(){

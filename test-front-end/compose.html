@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compose Email</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="compose-container">
+        <h1>Compose New Email</h1>
+        <form>
+            <div class="form-group">
+                <label for="to">To:</label>
+                <input type="email" id="to" name="to" required>
+            </div>
+            <div class="form-group">
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" name="subject" required>
+            </div>
+            <div class="form-group">
+                <label for="body">Body:</label>
+                <textarea id="body" name="body" rows="5" required></textarea>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="schedule" name="schedule">
+                <label for="schedule">Schedule</label>
+            </div>
+            <div class="form-group" id="scheduleTime" style="display:none;">
+                <label for="datetime">Schedule Date and Time:</label>
+                <input type="datetime-local" id="datetime" name="datetime">
+            </div>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
+
+<script>
+document.getElementById('schedule').addEventListener('change', function() {
+    var scheduleTime = document.getElementById('scheduleTime');
+    scheduleTime.style.display = this.checked ? 'block' : 'none';
+});
+</script>

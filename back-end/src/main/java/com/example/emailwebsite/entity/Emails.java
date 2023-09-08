@@ -1,5 +1,6 @@
 package com.example.emailwebsite.entity;
 
+import com.example.emailwebsite.dto.Label;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,7 +33,9 @@ public class Emails {
 
     private String body;
     @NonNull
-    private String label;
+    private Label label;
     @NonNull
     private Timestamp timeSend;
+    @NonNull
+    private Boolean isSchedule;
 }

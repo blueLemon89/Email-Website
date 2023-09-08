@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="compose-container">
+    <h1>Compose New Email</h1>
+    <form th:action="@{/user/index}" th:object="${emails}" method="post">
+    <div class="form-group">
+            <label >To:</label>
+<!--            <input type="email" id="to" name="to" required>-->
+            <input
+                    type = "text"
+                    name = "name"
+                    th:field = "*{recipientName}"
+                    class = "form-control"
+                    placeholder="Enter your recipient..."
+            />
+        </div>
+
+        <div class="form-group">
+            <label>Subject:</label>
+            <input
+                    type = "text"
+                    name = "name"
+                    th:field = "*{subject}"
+                    class = "form-control"
+                    placeholder="Enter your subject..."
+            />
+        </div>
+        <div class="form-group">
+            <label>Body:</label>
+            <input
+                    type = "text"
+                    name = "name"
+                    th:field = "*{body}"
+                    class = "form-control"
+                    placeholder="Enter your body..."
+            />
+        </div>
+        <div class="form-group">
+            <input
+                    type = "checkbox"
+                    name = "name"
+                    th:field = "*{isSchedule}"
+                    class = "form-control"
+            />
+            <label>Schedule?</label>
+        </div>
+        <div class="form-group" id="scheduleTime" style="display:none;">
+            <label for="datetime">Schedule Date and Time:</label>
+            <input type="datetime-local" id="datetime" name="datetime">
+        </div>
+        <button type="submit">Send</button>
+    </form>
+</div>
+</body>
+</html>
+
+<style>
+
+    body {
+        background-size: cover;
+        height:100%;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f9f9f9;
+    }
+
+    .compose-container {
+        margin-top: 50px;
+        width: 800px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+        margin-right: 20px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+    }
+
+    input[type="email"],
+    input[type="text"],
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    input[type="checkbox"] {
+        margin-right: 10px;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Định dạng ô thời gian */
+    input[type="datetime-local"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    /* Định dạng checkbox và nhãn */
+    input[type="checkbox"] {
+        margin-right: 10px;
+    }
+
+    label[for="schedule"] {
+        display: inline-block;
+        font-weight: normal;
+    }
+
+    /* Định dạng nút Gửi */
+    button[type="submit"] {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #218838;
+    }
+
+</style>
+
+<script>
+    document.getElementById('schedule').addEventListener('change', function() {
+        let scheduleTime = document.getElementById('scheduleTime');
+        scheduleTime.style.display = this.checked ? 'block' : 'none';
+    });
+
+    $(document).ready(function() {
+        $('#scheduleCheckbox').change(function() {
+            if (this.checked) {
+                $('[name="label"]').val(1);
+            } else {
+                $('[name="label"]').val(1);
+            }
+        });
+    });
+
+    $('#datetime').change(function() {
+        let selectedDatetime = $(this).val();
+        $('[name="timeSend"]').val(selectedDatetime);
+    });
+</script>

@@ -11,4 +11,5 @@ import java.util.List;
 public interface EmailsRepository extends JpaRepository<Emails, Integer> {
     @Query(value = "select * from emails e where e.account_id =:id", nativeQuery = true)
     List<Emails> getAllEmailByUserId(Long id);
+
 }
