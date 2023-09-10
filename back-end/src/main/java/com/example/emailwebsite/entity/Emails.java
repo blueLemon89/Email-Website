@@ -35,7 +35,6 @@ public class Emails {
     @NonNull
     private Label label;
     @NonNull
-    private Timestamp timeSend;
-    @NonNull
-    private Boolean isSchedule;
+    private String timeSend;
+//    private Boolean isSchedule;
 }

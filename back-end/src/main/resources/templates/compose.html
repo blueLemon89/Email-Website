@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Compose</title>
 </head>
 <body>
 <div class="compose-container">
@@ -40,19 +40,19 @@
                     placeholder="Enter your body..."
             />
         </div>
-        <div class="form-group">
-            <input
-                    type = "checkbox"
-                    name = "name"
-                    th:field = "*{isSchedule}"
-                    class = "form-control"
-            />
-            <label>Schedule?</label>
-        </div>
-        <div class="form-group" id="scheduleTime" style="display:none;">
-            <label for="datetime">Schedule Date and Time:</label>
-            <input type="datetime-local" id="datetime" name="datetime">
-        </div>
+<!--        <div class="form-group">-->
+<!--            <input-->
+<!--                    type = "checkbox"-->
+<!--                    name = "name"-->
+<!--                    th:field = "*{isSchedule}"-->
+<!--                    class = "form-control"-->
+<!--            />-->
+<!--            <label>Schedule?</label>-->
+<!--        </div>-->
+<!--        <div class="form-group" id="scheduleTime" style="display:none;">-->
+<!--            <label for="datetime">Schedule Date and Time:</label>-->
+<!--            <input type="datetime-local" id="datetime" name="datetime">-->
+<!--        </div>-->
         <button type="submit">Send</button>
     </form>
 </div>
@@ -157,23 +157,19 @@
 </style>
 
 <script>
-    document.getElementById('schedule').addEventListener('change', function() {
-        let scheduleTime = document.getElementById('scheduleTime');
-        scheduleTime.style.display = this.checked ? 'block' : 'none';
-    });
-
     $(document).ready(function() {
+        $('#schedule').change(function() {
+            let scheduleTime = $('#scheduleTime');
+            scheduleTime.css('display', this.checked ? 'block' : 'none');
+        });
+
         $('#scheduleCheckbox').change(function() {
-            if (this.checked) {
-                $('[name="label"]').val(1);
-            } else {
-                $('[name="label"]').val(1);
-            }
+            $('[name="isSchedule"]').val(this.checked ? 1 : 0);
+        });
+
+        $('#datetime').change(function() {
+            $('[name="timeSend"]').val($(this).val());
         });
     });
 
-    $('#datetime').change(function() {
-        let selectedDatetime = $(this).val();
-        $('[name="timeSend"]').val(selectedDatetime);
-    });
 </script>

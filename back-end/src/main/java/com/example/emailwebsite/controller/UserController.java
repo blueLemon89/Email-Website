@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @Controller
@@ -61,7 +62,11 @@ public class UserController {
     public String userIndex(@RequestParam("emailAddress") String emailAddress, Model model) {
         userEmailAddress = emailAddress;
         Long id = userService.findByEmail(emailAddress).getAccount_id();
-        List<Emails> emails = emailsService.getAllEmailByUserId(id);
+        // Get received email ?
+        List<Emails> emails = emailsService.getEmailsReceivedByUserId(id);
+
+        //List all
+//        List<Emails> emails = emailsService.getAllEmailByUserId(id);
         model.addAttribute("emails", emails);
         model.addAttribute("userName", emailAddress);
         return "emails";
@@ -74,7 +79,7 @@ public class UserController {
         return "compose";
     }
     @PostMapping("/user/index")
-    public String composeEmail(@ModelAttribute("email") Emails email){
+    public String composeEmail(@ModelAttribute("email") Emails email) throws ParseException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String senderEmailAddress = authentication.getName();
         emailsService.save(email, senderEmailAddress);
@@ -83,17 +88,49 @@ public class UserController {
 
     }
     @GetMapping("/user/sent")
-    public String sentEmails(){
-        return null;
-    }
-    @GetMapping("/user/trash")
-    public String trashEmails(){
-        return null;
+    public String userSent(@RequestParam("emailAddress") String emailAddress, Model model) {
+        userEmailAddress = emailAddress;
+        Long id = userService.findByEmail(emailAddress).getAccount_id();
+        // Get sent email ?
+        List<Emails> emails = emailsService.getEmailsSentByUserId(id);
+
+        //List all
+//        List<Emails> emails = emailsService.getAllEmailByUserId(id);
+        model.addAttribute("emails", emails);
+        model.addAttribute("userName", emailAddress);
+        return "sentEmails";
     }
     @GetMapping("/user/important")
-    public String importantEmail(){
-        return null;
+    public String userImportantEmails(@RequestParam("emailAddress") String emailAddress, Model model) {
+        userEmailAddress = emailAddress;
+        Long id = userService.findByEmail(emailAddress).getAccount_id();
+        // Get important email ?
+        List<Emails> emails = emailsService.getEmailsImportantByUserId(id);
+
+        //List all
+//        List<Emails> emails = emailsService.getAllEmailByUserId(id);
+        model.addAttribute("emails", emails);
+        model.addAttribute("userName", emailAddress);
+        return "importantEmails";
     }
+
+    @GetMapping("/user/trash")
+    public String userTrashEmails(@RequestParam("emailAddress") String emailAddress, Model model) {
+        userEmailAddress = emailAddress;
+        Long id = userService.findByEmail(emailAddress).getAccount_id();
+        // Get important email ?
+        List<Emails> emails = emailsService.getEmailsTrashByUserId(id);
+
+        //List all
+//        List<Emails> emails = emailsService.getAllEmailByUserId(id);
+        model.addAttribute("emails", emails);
+        model.addAttribute("userName", emailAddress);
+        return "trashEmails";
+    }
+//    @GetMapping("/user/important")
+//    public String importantEmail(){
+//        return null;
+//    }
     @GetMapping("/user/setting")
     public String setting(){
         return null;

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class EmailsService {
         return emailsRepository.getAllEmailByUserId(id);
     }
 
-    public void save(Emails emails, String senderName){
+    public void save(Emails emails, String senderName) throws ParseException {
         Emails newEmailSent = new Emails();
         Emails newEmailReceive = new Emails();
 
@@ -41,12 +43,20 @@ public class EmailsService {
         }
         Date date = new Date();
 
+        Timestamp getDate = new Timestamp(date.getTime());
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMMM yyyy");
+
+        Date newDate = inputFormat.parse(getDate.toString());
+        String result = outputFormat.format(newDate);
+
         if(emails.getRecipientName() != null){
             newEmailSent.setBody(emails.getBody());
             newEmailSent.setSubject(emails.getSubject());
             newEmailSent.setSenderName(senderName);
             newEmailSent.setRecipientName(emails.getRecipientName());
-            newEmailSent.setTimeSend(new Timestamp(date.getTime()));
+            newEmailSent.setTimeSend(result);
             newEmailSent.setAccount(accountSent);
             newEmailSent.setLabel(Label.SENT);
 
@@ -54,12 +64,28 @@ public class EmailsService {
             newEmailReceive.setSubject(emails.getSubject());
             newEmailReceive.setSenderName(senderName);
             newEmailReceive.setRecipientName(emails.getRecipientName());
-            newEmailReceive.setTimeSend(new Timestamp(date.getTime()));
+            newEmailReceive.setTimeSend(result);
             newEmailReceive.setAccount(accountReceive);
             newEmailReceive.setLabel(Label.RECEIVED);
         }
         emailsRepository.save(newEmailSent);
         emailsRepository.save(newEmailReceive);
+    }
+
+    public List<Emails> getEmailsReceivedByUserId(Long id) {
+        return emailsRepository.getEmailsReceivedByUserId(id);
+    }
+
+    public List<Emails> getEmailsSentByUserId(Long id) {
+        return emailsRepository.getEmailsSentByUserId(id);
+    }
+
+    public List<Emails> getEmailsImportantByUserId(Long id) {
+        return emailsRepository.getEmailsImportantByUserId(id);
+    }
+
+    public List<Emails> getEmailsTrashByUserId(Long id){
+        return emailsRepository.getEmailsTrashByUserId(id);
     }
 }
 
