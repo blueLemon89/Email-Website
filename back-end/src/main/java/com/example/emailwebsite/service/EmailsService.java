@@ -59,6 +59,7 @@ public class EmailsService {
             newEmailSent.setTimeSend(result);
             newEmailSent.setAccount(accountSent);
             newEmailSent.setLabel(Label.SENT);
+            newEmailSent.setStatus("None");
 
             newEmailReceive.setBody(emails.getBody());
             newEmailReceive.setSubject(emails.getSubject());
@@ -67,6 +68,7 @@ public class EmailsService {
             newEmailReceive.setTimeSend(result);
             newEmailReceive.setAccount(accountReceive);
             newEmailReceive.setLabel(Label.RECEIVED);
+            newEmailReceive.setStatus("None");
         }
         emailsRepository.save(newEmailSent);
         emailsRepository.save(newEmailReceive);
@@ -86,6 +88,15 @@ public class EmailsService {
 
     public List<Emails> getEmailsTrashByUserId(Long id){
         return emailsRepository.getEmailsTrashByUserId(id);
+    }
+
+    public void updateEmailStatus(Integer emailId, String status) {
+        Emails email = emailsRepository.findById(emailId).orElse(null);
+
+        if (email != null) {
+            email.setStatus(status);
+            emailsRepository.save(email);
+        }
     }
 }
 

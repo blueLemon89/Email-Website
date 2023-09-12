@@ -37,4 +37,5 @@ public class Emails {
     @NonNull
     private String timeSend;
 //    private Boolean isSchedule;
+    private String status;
 }

@@ -64,11 +64,10 @@ public class UserController {
         Long id = userService.findByEmail(emailAddress).getAccount_id();
         // Get received email ?
         List<Emails> emails = emailsService.getEmailsReceivedByUserId(id);
-
-        //List all
-//        List<Emails> emails = emailsService.getAllEmailByUserId(id);
+        String defaultStatus = emails.isEmpty() ? "None" : emails.get(0).getStatus();
         model.addAttribute("emails", emails);
         model.addAttribute("userName", emailAddress);
+        model.addAttribute("defaultStatus", defaultStatus);
         return "emails";
     }
 
@@ -93,11 +92,12 @@ public class UserController {
         Long id = userService.findByEmail(emailAddress).getAccount_id();
         // Get sent email ?
         List<Emails> emails = emailsService.getEmailsSentByUserId(id);
-
+        String defaultStatus = emails.isEmpty() ? "None" : emails.get(0).getStatus();
         //List all
 //        List<Emails> emails = emailsService.getAllEmailByUserId(id);
         model.addAttribute("emails", emails);
         model.addAttribute("userName", emailAddress);
+        model.addAttribute("defaultStatus", defaultStatus);
         return "sentEmails";
     }
     @GetMapping("/user/important")
@@ -106,11 +106,12 @@ public class UserController {
         Long id = userService.findByEmail(emailAddress).getAccount_id();
         // Get important email ?
         List<Emails> emails = emailsService.getEmailsImportantByUserId(id);
-
+        String defaultStatus = emails.isEmpty() ? "None" : emails.get(0).getStatus();
         //List all
 //        List<Emails> emails = emailsService.getAllEmailByUserId(id);
         model.addAttribute("emails", emails);
         model.addAttribute("userName", emailAddress);
+        model.addAttribute("defaultStatus", defaultStatus);
         return "importantEmails";
     }
 
@@ -120,21 +121,23 @@ public class UserController {
         Long id = userService.findByEmail(emailAddress).getAccount_id();
         // Get important email ?
         List<Emails> emails = emailsService.getEmailsTrashByUserId(id);
-
-        //List all
-//        List<Emails> emails = emailsService.getAllEmailByUserId(id);
+        String defaultStatus = emails.isEmpty() ? "None" : emails.get(0).getStatus();
         model.addAttribute("emails", emails);
         model.addAttribute("userName", emailAddress);
+        model.addAttribute("defaultStatus", defaultStatus);
         return "trashEmails";
     }
-//    @GetMapping("/user/important")
-//    public String importantEmail(){
-//        return null;
-//    }
     @GetMapping("/user/setting")
-    public String setting(){
-        return null;
+    public String setting(@RequestParam("emailAddress") String emailAddress, Model model) {
+
+        return "setting";
     }
 
+    @PostMapping("/user/updateStatus")
+    public String updateStatus(@RequestParam Integer emailId, @RequestParam String status) {
+        String senderEmailAddress = userEmailAddress;
+        emailsService.updateEmailStatus(emailId, status);
+        return "redirect:/user/index?emailAddress=" +senderEmailAddress;
+    }
 
 }
