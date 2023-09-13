@@ -98,5 +98,14 @@ public class EmailsService {
             emailsRepository.save(email);
         }
     }
+
+    public List<Emails> getAllEmails(String status, String label) {
+        return emailsRepository.getAll(status, label);
+    }
+
+
+    public List<Emails> getEmailsByKeyWord(String keyWord) {
+        return emailsRepository.getEmailsByKeyWord(keyWord);
+    }
 }
 

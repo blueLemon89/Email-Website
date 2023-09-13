@@ -42,6 +42,18 @@
       </li>
     </ul>
   </div>
+
+<!--  Search bar-->
+  <div class="container">
+      <div class="col-md-8">
+        <form th:action="@{/user/search(emailAddress=${userName},keyWord=${keyWord})}" method="get">
+          <input class="input-search" type="text" name="keyWord" th:value="${keyWord}"  placeholder="Search in Mails..." >
+          <button type="submit" class="btn btn-info">Search</button>
+        </form>
+      </div>
+    </div>
+
+<!--  Page content-->
   <div class="mcw">
     <div class="cv">
       <div>
@@ -59,7 +71,7 @@
                     <td th:text = "${email.body}"></td>
                     <td th:text = "${email.timeSend}"></td>
                     <td>
-                      <select class="label-dropdown" th:attr="data-email-id=${email.emailId}">
+                      <select name="one" class="label-dropdown" th:attr="data-email-id=${email.emailId}">
                         <option value="None" th:selected="${defaultStatus == 'None'}">None</option>
                         <option value="Trash" th:selected="${defaultStatus == 'Trash'}">Trash</option>
                         <option value="Important" th:selected="${defaultStatus == 'Important'}">Important</option>
@@ -256,6 +268,17 @@
 
   .button-17:disabled {
     box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+  }
+
+  .input-search{
+    height: 40px;
+    padding-right: 100px;
+    border-radius: 10px;
+  }
+
+  .container{
+    padding-top: 10px;
+    margin-left: -60px;
   }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

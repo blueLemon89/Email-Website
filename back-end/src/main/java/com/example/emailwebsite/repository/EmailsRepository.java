@@ -20,4 +20,11 @@ public interface EmailsRepository extends JpaRepository<Emails, Integer> {
 
     @Query(value = "select * from emails e where e.status = 'Trash' and e.account_id =:id", nativeQuery = true)
     List<Emails> getEmailsTrashByUserId(Long id);
+
+    @Query(value = "select * from emails e where e.status =:status and e.label =:label", nativeQuery = true)
+    List<Emails> getAll(String status, String label);
+
+    @Query(value = "select * from emails e where e.senderName like %:keyWord% or e.recipientName like %:keyWord% " +
+            "or e.subject like %:keyWord% or e.body like %:keyWord%", nativeQuery = true)
+    List<Emails> getEmailsByKeyWord(String keyWord);
 }

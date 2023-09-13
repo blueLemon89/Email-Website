@@ -139,5 +139,25 @@ public class UserController {
         emailsService.updateEmailStatus(emailId, status);
         return "redirect:/user/index?emailAddress=" +senderEmailAddress;
     }
+    @GetMapping("/user/search")
+    public String search(Model model, @RequestParam("emailAddress") String emailAddress,@RequestParam String keyWord){
+        List<Emails> emailsList;
+        emailAddress = userEmailAddress;
+        Long id = userService.findByEmail(emailAddress).getAccount_id();
+        if(keyWord != null){
+            emailsList = emailsService.getEmailsByKeyWord(keyWord);
+            if(emailsList.isEmpty()){
+                emailsList = emailsService.getEmailsReceivedByUserId(id);
+                model.addAttribute("error", "Can not find the email!");
 
+            } else {
+                model.addAttribute("success", "Search successfully!");
+            }
+        }
+        else {
+            emailsList = emailsService.getEmailsReceivedByUserId(id);
+        }
+        model.addAttribute("emails", emailsList);
+        return "redirect:/user/index?emailAddress=" + emailAddress;
+    }
 }
