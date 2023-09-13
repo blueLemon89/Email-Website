@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class EmailsService {
         Emails newEmailReceive = new Emails();
 
 //        Long accId = accountRepository.getIdByEmailAddress(senderName);
-        Account accountSent = accountRepository.findByEmailAddress(senderName);
+        Account accountSent = accountRepository.findByUserName(senderName);
         Account accountReceive = new Account();
         if(emails.getRecipientName() != null) {
             String emailAddressReceive = accountRepository.findEmailAddressByUserName(emails.getRecipientName());
@@ -52,8 +53,11 @@ public class EmailsService {
         String result = outputFormat.format(newDate);
 
         if(emails.getRecipientName() != null){
-            newEmailSent.setBody(emails.getBody());
-            newEmailSent.setSubject(emails.getSubject());
+            String encodedBody = Base64.getEncoder().encodeToString(emails.getBody().getBytes());
+            String encodedSubject = Base64.getEncoder().encodeToString(emails.getSubject().getBytes());
+
+            newEmailSent.setBody(encodedBody);
+            newEmailSent.setSubject(encodedSubject);
             newEmailSent.setSenderName(senderName);
             newEmailSent.setRecipientName(emails.getRecipientName());
             newEmailSent.setTimeSend(result);
@@ -61,8 +65,8 @@ public class EmailsService {
             newEmailSent.setLabel(Label.SENT);
             newEmailSent.setStatus("None");
 
-            newEmailReceive.setBody(emails.getBody());
-            newEmailReceive.setSubject(emails.getSubject());
+            newEmailReceive.setBody(encodedBody);
+            newEmailReceive.setSubject(encodedSubject);
             newEmailReceive.setSenderName(senderName);
             newEmailReceive.setRecipientName(emails.getRecipientName());
             newEmailReceive.setTimeSend(result);
@@ -75,19 +79,30 @@ public class EmailsService {
     }
 
     public List<Emails> getEmailsReceivedByUserId(Long id) {
-        return emailsRepository.getEmailsReceivedByUserId(id);
+        List<Emails> receivedEmails = emailsRepository.getEmailsReceivedByUserId(id);
+
+        // Decode body and subject for each received email
+        decodeEmails(receivedEmails);
+        return receivedEmails;
     }
 
     public List<Emails> getEmailsSentByUserId(Long id) {
-        return emailsRepository.getEmailsSentByUserId(id);
+        List<Emails> sentEmails = emailsRepository.getEmailsSentByUserId(id);
+        // Decode body and subject for each received email
+        decodeEmails(sentEmails);
+        return sentEmails;
     }
 
     public List<Emails> getEmailsImportantByUserId(Long id) {
-        return emailsRepository.getEmailsImportantByUserId(id);
+        List<Emails> importantEmails = emailsRepository.getEmailsImportantByUserId(id);
+        decodeEmails(importantEmails);
+        return importantEmails;
     }
 
     public List<Emails> getEmailsTrashByUserId(Long id){
-        return emailsRepository.getEmailsTrashByUserId(id);
+        List<Emails> trashEmails = emailsRepository.getEmailsTrashByUserId(id);
+        decodeEmails(trashEmails);
+        return trashEmails;
     }
 
     public void updateEmailStatus(Integer emailId, String status) {
@@ -106,6 +121,29 @@ public class EmailsService {
 
     public List<Emails> getEmailsByKeyWord(String keyWord) {
         return emailsRepository.getEmailsByKeyWord(keyWord);
+    }
+
+    private void decodeEmails(List<Emails> emailList){
+        for (Emails email : emailList) {
+            String decodedBody = new String(Base64.getDecoder().decode(email.getBody()));
+            String decodedSubject = new String(Base64.getDecoder().decode(email.getSubject()));
+            email.setBody(decodedBody);
+            email.setSubject(decodedSubject);
+        }
+    }
+
+    public Emails getEmailById(Integer emailId) {
+        Emails email = emailsRepository.getEmailById(emailId);
+        String decodedBody = new String(Base64.getDecoder().decode(email.getBody()));
+        String decodedSubject = new String(Base64.getDecoder().decode(email.getSubject()));
+        email.setBody(decodedBody);
+        email.setSubject(decodedSubject);
+        return email;
+    }
+
+
+    public String getEmailAddressById(Integer emailId) {
+        return emailsRepository.getEmailAddressById(emailId);
     }
 }
 

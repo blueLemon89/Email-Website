@@ -26,7 +26,7 @@ public class UserController {
     @Lazy
     private final EmailsService emailsService;
 
-    private String userEmailAddress;
+    private static String userEmailAddress = null;
 
     @Autowired
     public UserController(UserService userService, EmailsService emailsService) {
@@ -34,32 +34,8 @@ public class UserController {
         this.emailsService = emailsService;
     }
 
-    public void constructor(String name){
-        this.userEmailAddress = name;
-    }
-    @GetMapping("/register")
-    public String regis(Model model) {
-        RegisterDto registerDto = new RegisterDto();
-        model.addAttribute("register", registerDto);
-        return "register";
-    }
-
-    @PostMapping("/register/user")
-    public String saveUser(@Valid @ModelAttribute("register")
-                           RegisterDto registerDto, Model model, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("register", registerDto);
-            return "register";
-        }
-        Account existingUser = userService.findByEmail(registerDto.getEmail());
-        if (existingUser != null) {
-            bindingResult.rejectValue("email", null, "User already use!!" + existingUser);
-        }
-        userService.save(registerDto);
-        return "redirect:/login";
-    }
-    @GetMapping("/user/index")
-    public String userIndex(@RequestParam("emailAddress") String emailAddress, Model model) {
+    @GetMapping("/user/index/{emailAddress}")
+    public String userIndex(@PathVariable String emailAddress, Model model) {
         userEmailAddress = emailAddress;
         Long id = userService.findByEmail(emailAddress).getAccount_id();
         // Get received email ?
@@ -70,7 +46,6 @@ public class UserController {
         model.addAttribute("defaultStatus", defaultStatus);
         return "emails";
     }
-
     @GetMapping("/user/compose")
     public String getCompose(Model model){
         Emails emails = new Emails();
@@ -81,13 +56,13 @@ public class UserController {
     public String composeEmail(@ModelAttribute("email") Emails email) throws ParseException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String senderEmailAddress = authentication.getName();
-        emailsService.save(email, senderEmailAddress);
-//        model.addAttribute("email", senderEmailAddress);
-        return "redirect:/user/index?emailAddress=" +senderEmailAddress;
+        String senderName = userService.getUserNameByEmailAddress(senderEmailAddress);
+        emailsService.save(email, senderName);
+        return "redirect:/user/index/" +senderEmailAddress;
 
     }
-    @GetMapping("/user/sent")
-    public String userSent(@RequestParam("emailAddress") String emailAddress, Model model) {
+    @GetMapping("/user/{emailAddress}/sent")
+    public String userSent(@PathVariable String emailAddress, Model model) {
         userEmailAddress = emailAddress;
         Long id = userService.findByEmail(emailAddress).getAccount_id();
         // Get sent email ?
@@ -100,8 +75,8 @@ public class UserController {
         model.addAttribute("defaultStatus", defaultStatus);
         return "sentEmails";
     }
-    @GetMapping("/user/important")
-    public String userImportantEmails(@RequestParam("emailAddress") String emailAddress, Model model) {
+    @GetMapping("/user/{emailAddress}/important")
+    public String userImportantEmails(@PathVariable String emailAddress, Model model) {
         userEmailAddress = emailAddress;
         Long id = userService.findByEmail(emailAddress).getAccount_id();
         // Get important email ?
@@ -115,8 +90,8 @@ public class UserController {
         return "importantEmails";
     }
 
-    @GetMapping("/user/trash")
-    public String userTrashEmails(@RequestParam("emailAddress") String emailAddress, Model model) {
+    @GetMapping("/user/{emailAddress}/trash")
+    public String userTrashEmails(@PathVariable String emailAddress, Model model) {
         userEmailAddress = emailAddress;
         Long id = userService.findByEmail(emailAddress).getAccount_id();
         // Get important email ?
@@ -127,9 +102,8 @@ public class UserController {
         model.addAttribute("defaultStatus", defaultStatus);
         return "trashEmails";
     }
-    @GetMapping("/user/setting")
-    public String setting(@RequestParam("emailAddress") String emailAddress, Model model) {
-
+    @GetMapping("/user/{emailAddress}/setting")
+    public String setting(@PathVariable String emailAddress, Model model) {
         return "setting";
     }
 
@@ -137,17 +111,18 @@ public class UserController {
     public String updateStatus(@RequestParam Integer emailId, @RequestParam String status) {
         String senderEmailAddress = userEmailAddress;
         emailsService.updateEmailStatus(emailId, status);
-        return "redirect:/user/index?emailAddress=" +senderEmailAddress;
+        return "redirect:/user/index/" +senderEmailAddress;
     }
-    @GetMapping("/user/search")
-    public String search(Model model, @RequestParam("emailAddress") String emailAddress,@RequestParam String keyWord){
+    @GetMapping("/user/{emailAddress}/search")
+    public String search(Model model, @PathVariable("emailAddress") String emailAddress,@RequestParam String keyWord){
         List<Emails> emailsList;
-        emailAddress = userEmailAddress;
+        userEmailAddress = emailAddress;
         Long id = userService.findByEmail(emailAddress).getAccount_id();
         if(keyWord != null){
             emailsList = emailsService.getEmailsByKeyWord(keyWord);
             if(emailsList.isEmpty()){
                 emailsList = emailsService.getEmailsReceivedByUserId(id);
+                model.addAttribute("userName", emailAddress);
                 model.addAttribute("error", "Can not find the email!");
 
             } else {
@@ -158,6 +133,15 @@ public class UserController {
             emailsList = emailsService.getEmailsReceivedByUserId(id);
         }
         model.addAttribute("emails", emailsList);
-        return "redirect:/user/index?emailAddress=" + emailAddress;
+        return "redirect:/user/"+ emailAddress+ "/sent" ;
+    }
+
+    @GetMapping("/user/emailDetails/{emailId}")
+    public String viewEmailDetails(@PathVariable Integer emailId, Model model) {
+        String emailAddress = emailsService.getEmailAddressById(emailId);
+        Emails email = emailsService.getEmailById(emailId);
+        model.addAttribute("userName", emailAddress);
+        model.addAttribute("email", email);
+        return "emailDetail"; // Create a corresponding HTML template for email details
     }
 }

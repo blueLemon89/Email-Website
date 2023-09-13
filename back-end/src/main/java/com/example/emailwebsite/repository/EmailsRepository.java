@@ -24,7 +24,12 @@ public interface EmailsRepository extends JpaRepository<Emails, Integer> {
     @Query(value = "select * from emails e where e.status =:status and e.label =:label", nativeQuery = true)
     List<Emails> getAll(String status, String label);
 
-    @Query(value = "select * from emails e where e.senderName like %:keyWord% or e.recipientName like %:keyWord% " +
+    @Query(value = "select * from emails e where e.sender_name like %:keyWord% or e.recipient_name like %:keyWord% " +
             "or e.subject like %:keyWord% or e.body like %:keyWord%", nativeQuery = true)
     List<Emails> getEmailsByKeyWord(String keyWord);
+
+    @Query(value =  "select * from emails e where e.email_id =:emailId LIMIT 1", nativeQuery = true)
+    Emails getEmailById(Integer emailId);
+    @Query(value = "SELECT a.account_email FROM Emails e JOIN Account a ON e.account_id = a.account_id WHERE e.email_id = :emailId", nativeQuery = true)
+    String getEmailAddressById(Integer emailId);
 }

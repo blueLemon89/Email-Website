@@ -19,7 +19,7 @@
         <ul class="sidebar-nav">
             <li class="sidebar-brand">
 
-                <a th:href="@{/user/index(emailAddress=${userName})}">
+                <a th:href="@{/user/index/{userName}(userName=${userName})}">
                     <i class="fas fa-home"></i> Home
                 </a>
             </li>
@@ -28,20 +28,36 @@
                     <i class="fas fa-pen"></i>Compose</button>
             </form>
             <li class="sidebar-list">
-                <a th:href="@{/user/sent(emailAddress=${userName})}">
-                    <i class="fas fa-paper-plane"></i>Sent</a>
+                <a th:href="@{/user/{userName}/sent(userName=${userName})}">
+                    <i class="fas fa-paper-plane"></i>Sent
+                </a>
             </li>
             <li class="sidebar-list">
-                <a th:href="@{/user/important(emailAddress=${userName})}">Important</a>
+                <a th:href="@{/user/{userName}/important(userName=${userName})}">Important</a>
             </li>
             <li class="sidebar-list">
-                <a th:href="@{/user/trash(emailAddress=${userName})}">Trash</a>
+                <a th:href="@{/user/{userName}/trash(userName=${userName})}">Trash</a>
             </li>
             <li class="sidebar-list">
-                <a th:href="@{/user/setting(emailAddress=${userName})}">Setting</a>
+                <a th:href="@{/user/{userName}/setting(userName=${userName})}">Setting</a>
+            </li>
+            <li>
+                <a th:href="@{/logout}">Log-out</a>
             </li>
         </ul>
     </div>
+
+    <!--  Search bar-->
+    <div class="container">
+        <div class="col-md-8">
+            <form th:action="@{/user/search(emailAddress=${userName},keyWord=${keyWord})}" method="get">
+                <input class="input-search" type="text" name="keyWord" th:value="${keyWord}"  placeholder="Search in Mails..." >
+                <button type="submit" class="btn btn-info">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!--  Page content-->
     <div class="mcw">
         <div class="cv">
             <div>
@@ -59,13 +75,17 @@
                                         <td th:text = "${email.body}"></td>
                                         <td th:text = "${email.timeSend}"></td>
                                         <td>
-                                            <select class="label-dropdown" th:attr="data-email-id=${email.emailId}">
+                                            <select name="one" class="label-dropdown" th:attr="data-email-id=${email.emailId}">
                                                 <option value="None" th:selected="${defaultStatus == 'None'}">None</option>
                                                 <option value="Trash" th:selected="${defaultStatus == 'Trash'}">Trash</option>
                                                 <option value="Important" th:selected="${defaultStatus == 'Important'}">Important</option>
                                             </select>
                                         </td>
-
+                                        <td>
+                                            <a th:href="@{/user/emailDetails/{emailId}(emailId=${email.emailId})}">
+                                                <p>Detail</p>
+                                            </a>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -89,7 +109,7 @@
         color: #12230c;
         font-family: Arial, sans-serif;
         background-color: #fff;
-        font-size: 14px;
+        font-size: 16px;
         letter-spacing: 0.01em;
         margin: 0;
         height: 100%;
@@ -202,7 +222,7 @@
         display: inline-flex;
         fill: currentcolor;
         font-family: "Google Sans",Roboto,Arial,sans-serif;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 500;
         height: 48px;
         justify-content: center;
@@ -256,6 +276,17 @@
 
     .button-17:disabled {
         box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    }
+
+    .input-search{
+        height: 40px;
+        padding-right: 100px;
+        border-radius: 10px;
+    }
+
+    .container{
+        padding-top: 10px;
+        margin-left: -60px;
     }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

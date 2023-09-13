@@ -24,7 +24,7 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler {
         String userName = authentication.getName();
         RedirectAttributes attributes = new RedirectAttributesModelMap();
         attributes.addAttribute("emailAddress", userName);
-        response.sendRedirect("/user/index?emailAddress=" + userName);
+        response.sendRedirect("/user/index/" + userName);
     }
 
     private Boolean isAdmin(Authentication authentication){

@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +27,7 @@ public class UserService implements UserDetailsService {
     private final AccountRepository accountRepo;
     private final RolesRepository rolesRepo;
     private final PasswordEncoder passwordEncoder;
+    JavaMailSender javaMailSender;
 
     @Autowired
     public UserService(AccountRepository accountRepo, RolesRepository rolesRepo, PasswordEncoder passwordEncoder) {
@@ -84,5 +87,7 @@ public class UserService implements UserDetailsService {
         return id;
     }
 
-
+    public String getUserNameByEmailAddress(String senderEmailAddress) {
+        return accountRepo.getUserNameByEmailAddress(senderEmailAddress);
+    }
 }

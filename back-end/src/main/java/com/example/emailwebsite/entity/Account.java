@@ -28,8 +28,6 @@ public class Account implements UserDetails {
     private String emailAddress;
     @Column(name = "account_password")
     private String password;
-    @Column(name ="OTP")
-    private String otp;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.PERSIST)
     private List<Emails> emails;
